@@ -1,12 +1,12 @@
 ###Team 6
 ### Andrew Sexton, Ella Pan, Steven Alvarado, Alexa Mikeska 
 
-###We are trying to show... 
+###We are trying to show... 3 differnet investment vehicles and see if they move independently, together, or perhaps opposite each other
 
 import yfinance as yf
 
 # Define tickers
-tickers = ["SPY", "GC=F", "^GSPC"]   # <-- ^GSPC is the S&P 500 Index
+tickers = ["BTC-USD", "GC=F", "^GSPC"]   # <-- BTC-USD is Bitcoin in US Dollars, GC=F is Gold Futures, ^GSPC is the S&P 500 Index
 
 # Download historical data (last year, daily)
 data = yf.download(tickers, start="2024-01-01", end="2025-01-01")
@@ -18,13 +18,23 @@ print(data.head())
 close_prices = data["Close"]
 print(close_prices.head())
 
-# Optional: Plot the closing prices
-import matplotlib.pyplot as plt
+# normalize the close prices
+normalized_close_prices = (close_prices - close_prices.min()) / (close_prices.max() - close_prices.min())
+print(normalized_close_prices.head())
 
-close_prices.plot(figsize=(10,6))
-plt.title("SPY, Gold Futures, and S&P 500 Index")
-plt.ylabel("Price")
+# Plot the closing prices
+import matplotlib.pyplot as plt
+import pandas as pd
+
+plt.figure(figsize=(10, 6))
+for ticker in ['BTC-USD', 'GC=F', '^GSPC']:
+    # Drop rows with NaN values for the current ticker and reset the index
+    ticker_data = normalized_close_prices[ticker].dropna()
+    plt.plot(ticker_data.index, ticker_data, label=ticker)
+
+plt.title("Normalized Closing Price Over Time")
 plt.xlabel("Date")
-plt.grid(True)
+plt.ylabel("Normalized Price")
+plt.legend()
 plt.show()
 
