@@ -2,3 +2,20 @@
 ### Andrew Sexton, Ella Pan, Steven Alvarado, Alexa Mikeska 
 
 ###We are trying to show... 
+
+##Getting the library imported 
+# First install the package (in terminal or notebook)
+# pip install yfinance
+
+import yfinance as yf
+
+# Example: Get stock data for Apple (AAPL)
+ticker = yf.Ticker("SPY")
+
+# Get basic info about the company
+print(ticker.info)
+
+# Get historical stock prices (last 1 year, daily)
+hist = ticker.history(period="1y")
+print(hist.head())
+
