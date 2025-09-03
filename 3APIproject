@@ -3,19 +3,28 @@
 
 ###We are trying to show... 
 
-##Getting the library imported 
-# First install the package (in terminal or notebook)
-# pip install yfinance
-
 import yfinance as yf
 
-# Example: Get stock data for Apple (AAPL)
-ticker = yf.Ticker("SPY")
+# Define tickers
+tickers = ["SPY", "GC=F", "^GSPC"]   # <-- ^GSPC is the S&P 500 Index
 
-# Get basic info about the company
-print(ticker.info)
+# Download historical data (last year, daily)
+data = yf.download(tickers, start="2024-01-01", end="2025-01-01")
 
-# Get historical stock prices (last 1 year, daily)
-hist = ticker.history(period="1y")
-print(hist.head())
+# Show the first few rows
+print(data.head())
+
+# Example: closing prices only
+close_prices = data["Close"]
+print(close_prices.head())
+
+# Optional: Plot the closing prices
+import matplotlib.pyplot as plt
+
+close_prices.plot(figsize=(10,6))
+plt.title("SPY, Gold Futures, and S&P 500 Index")
+plt.ylabel("Price")
+plt.xlabel("Date")
+plt.grid(True)
+plt.show()
 
