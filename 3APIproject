@@ -35,6 +35,16 @@ for ticker in ['BTC-USD', 'GC=F', '^GSPC']:
 plt.title("Normalized Closing Price Over Time")
 plt.xlabel("Date")
 plt.ylabel("Normalized Price")
-plt.legend()
+plt.legend(["Bitcoin", "Gold", "S&P 500"])
 plt.show()
 
+# Calculate correlation matrix
+correlation_matrix = normalized_close_prices.corr()
+print("Correlation matrix of normalized closing prices:")
+print(correlation_matrix)
+# Ticker    BTC-USD      GC=F     ^GSPC
+# Ticker
+# BTC-USD  1.000000  0.651543  0.759932   
+# GC=F     0.651543  1.000000  0.911113   
+# ^GSPC    0.759932  0.911113  1.000000 
+# There is strong correlation between Gold and the S&P 500 for the year shown. Some correlation between Bitcoin and the S&P. This would stand to reason that ma
