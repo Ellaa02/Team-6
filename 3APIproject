@@ -3,24 +3,39 @@
 
 ###We are trying to show... 3 differnet investment vehicles and see if they move independently, together, or perhaps opposite each other
 
-import yfinance as yf
+import yfinance as yf  # Import yfinance library for downloading financial data
 
-# Define tickers
-tickers = ["BTC-USD", "GC=F", "^GSPC"]   # <-- BTC-USD is Bitcoin in US Dollars, GC=F is Gold Futures, ^GSPC is the S&P 500 Index
+# Define the tickers (symbols) we want to analyze
+tickers = ["BTC-USD", "GC=F", "^GSPC"]   
+# "BTC-USD" = Bitcoin in US dollars
+# "GC=F"    = Gold Futures
+# "^GSPC"   = S&P 500 Index
 
-# Download historical data (last year, daily)
-data = yf.download(tickers, start="2024-01-01", end="2025-01-01")
+# Create a mapping from ticker symbols to readable names
+ticker_labels = {
+    "BTC-USD": "Bitcoin (USD)",
+    "GC=F": "Gold Futures",
+    "^GSPC": "S&P 500"
+}
 
-# Show the first few rows
-print(data.head())
+# Fetch historical daily data from Yahoo Finance
+data = yf.download(
+    tickers,                # list of tickers
+    start="2024-01-01",     # start date
+    end="2025-01-01",       # end date (non-inclusive)
+    auto_adjust=True        # adjust for splits/dividends (for stocks/ETFs)
+)
 
-# Example: closing prices only
-close_prices = data["Close"]
-print(close_prices.head())
+print(data.head())  
 
-# normalize the close prices
+# Extract only the "Close" prices from the full dataset (Open, High, Low, Close, Volume)
+close_prices = data["Close"]  
+print(close_prices.head())   # Print first 5 rows to check format
+
+# Normalize the close prices for comparison
+# Formula: (value - min) / (max - min) → rescales all values between 0 and 1
 normalized_close_prices = (close_prices - close_prices.min()) / (close_prices.max() - close_prices.min())
-print(normalized_close_prices.head())
+print(normalized_close_prices.head())  # Print first 5 rows of normalized data
 
 # Plot the closing prices
 import matplotlib.pyplot as plt
@@ -30,12 +45,17 @@ plt.figure(figsize=(10, 6))
 for ticker in ['BTC-USD', 'GC=F', '^GSPC']:
     # Drop rows with NaN values for the current ticker and reset the index
     ticker_data = normalized_close_prices[ticker].dropna()
-    plt.plot(ticker_data.index, ticker_data, label=ticker)
+    plt.plot(ticker_data.index, ticker_data, label=ticker_labels[ticker]) # use mapped name
 
-plt.title("Normalized Closing Price Over Time")
+plt.title("Bitcoin, Gold, and S&P 500 Performance in 2024-2025 (Normalized)")
 plt.xlabel("Date")
+<<<<<<< HEAD
 plt.ylabel("Normalized Price")
 plt.legend(["Bitcoin", "Gold", "S&P 500"])
+=======
+plt.ylabel("Normalized Closing Price (0–1)")
+plt.legend()
+>>>>>>> 4d513d8 (Added comments and ticker label - complete data fetching)
 plt.show()
 
 # Calculate correlation matrix
