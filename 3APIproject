@@ -3,7 +3,7 @@
 
 ###We are trying to show... 3 differnet investment vehicles and see if they move independently, together, or perhaps opposite each other
 
-import yfinance as yf  # Import yfinance library for downloading financial data
+import yfinance as yf  # Import yfinance library for downloading financial data, utilized AI to learn how to import yfinance 
 
 # Define the tickers (symbols) we want to analyze
 tickers = ["BTC-USD", "GC=F", "^GSPC"]   
