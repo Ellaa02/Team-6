@@ -1,1 +1,29 @@
+# Define asset pairs to compare with VIX
+asset_pairs = {
+    "Bitcoin": "BTC-USD",
+    "Gold": "GC=F",
+    "S&P 500": "^GSPC"
+}
 
+# Create individual plots
+for name, ticker in asset_pairs.items():
+    plt.figure(figsize=(10, 6))
+    
+    # Drop NaNs for both VIX and the asset
+    vix_data = normalized_close_prices["^VIX"].dropna()
+    asset_data = normalized_close_prices[ticker].dropna()
+    
+    # Align both series by date
+    combined = pd.concat([vix_data, asset_data], axis=1, join="inner")
+    combined.columns = ["VIX", name]
+    
+    # Plot
+    plt.plot(combined.index, combined["VIX"], label="VIX", color="red")
+    plt.plot(combined.index, combined[name], label=name, color="blue")
+    
+    plt.title(f"VIX vs {name} (Normalized Closing Prices)")
+    plt.xlabel("Date")
+    plt.ylabel("Normalized Price")
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
