@@ -1,8 +1,28 @@
+###Team 6
+### Andrew Sexton, Ella Pan, Steven Alvarado, Alexa Mikeska 
+
+### We are trying to show... 3 different investment vehicles alongside the 
+### CBOE Volatility Index and see if they move independently, together, or
+### perhaps opposite each other
+
+# Import yfinance library for downloading financial data, utilized AI to learn how to import yfinance 
 import yfinance as yf
 import matplotlib.pyplot as plt
 
+# Define the tickers (symbols) we want to analyze
 tickers = ["BTC-USD", "GC=F", "^GSPC", "^VIX"]
-data = yf.download(tickers, start="2024-01-01", end="2025-01-01")["Close"]
+# "BTC-USD" = Bitcoin in US dollars
+# "GC=F"    = Gold Futures
+# "^GSPC"   = S&P 500 Index
+# "^VIX"    = CBOE Volatility Index
+
+data = yf.download(
+    tickers,
+    start="2024-01-01",
+    end="2025-01-01")["Close"]
+
+# Normalize the close prices for comparison
+# Formula: (value - min) / (max - min) → rescales all values between 0 and 1
 normalized = (data - data.min()) / (data.max() - data.min())
 
 # Assign specific colors: Bitcoin blue, Gold orange, S&P 500 green, VIX black
