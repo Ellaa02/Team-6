@@ -5,10 +5,10 @@ tickers = ["BTC-USD", "GC=F", "^GSPC", "^VIX"]
 data = yf.download(tickers, start="2024-01-01", end="2025-01-01")["Close"]
 normalized = (data - data.min()) / (data.max() - data.min())
 
-# Assign specific colors: Bitcoin blue, Gold orange, S&P 500 green, VIX black
+# Assign colors
 colors = {
     'BTC-USD': 'blue',
-    'GC=F': 'orange',    # Now orange instead of gold
+    'GC=F': 'orange',   # Orange for Gold
     '^GSPC': 'green',
     '^VIX': 'black'
 }
@@ -16,40 +16,43 @@ light_grey = '#f2f2f2'
 
 fig, axes = plt.subplots(2, 2, figsize=(14, 10), sharex=True, facecolor=light_grey)
 
-# 1. All assets + VIX
+# Plot 1: All assets + VIX
 axes[0, 0].plot(normalized.index, normalized['BTC-USD'], label='Bitcoin', color=colors['BTC-USD'])
 axes[0, 0].plot(normalized.index, normalized['GC=F'], label='Gold', color=colors['GC=F'])
 axes[0, 0].plot(normalized.index, normalized['^GSPC'], label='S&P 500', color=colors['^GSPC'])
 axes[0, 0].plot(normalized.index, normalized['^VIX'], label='VIX', linewidth=2, color=colors['^VIX'])
 axes[0, 0].set_title('All Assets + VIX')
-axes[0, 0].legend()
 axes[0, 0].set_facecolor(light_grey)
 
-# 2. Bitcoin + VIX
+# Plot 2: Bitcoin + VIX
 axes[0, 1].plot(normalized.index, normalized['BTC-USD'], label='Bitcoin', color=colors['BTC-USD'])
 axes[0, 1].plot(normalized.index, normalized['^VIX'], label='VIX', linewidth=2, color=colors['^VIX'])
 axes[0, 1].set_title('Bitcoin + VIX')
-axes[0, 1].legend()
 axes[0, 1].set_facecolor(light_grey)
 
-# 3. Gold + VIX
+# Plot 3: Gold + VIX
 axes[1, 0].plot(normalized.index, normalized['GC=F'], label='Gold', color=colors['GC=F'])
 axes[1, 0].plot(normalized.index, normalized['^VIX'], label='VIX', linewidth=2, color=colors['^VIX'])
 axes[1, 0].set_title('Gold + VIX')
-axes[1, 0].legend()
 axes[1, 0].set_facecolor(light_grey)
 
-# 4. S&P 500 + VIX
+# Plot 4: S&P 500 + VIX
 axes[1, 1].plot(normalized.index, normalized['^GSPC'], label='S&P 500', color=colors['^GSPC'])
 axes[1, 1].plot(normalized.index, normalized['^VIX'], label='VIX', linewidth=2, color=colors['^VIX'])
 axes[1, 1].set_title('S&P 500 + VIX')
-axes[1, 1].legend()
 axes[1, 1].set_facecolor(light_grey)
 
 for ax in axes.flat:
     ax.set_xlabel("Date")
     ax.set_ylabel("Normalized Price")
+    ax.legend()
     ax.grid(True, linestyle='--', alpha=0.3)
+    # Rotate x-axis labels for readability
+    for label in ax.get_xticklabels():
+        label.set_rotation(45)
+
+# Autofmt date labels on the whole figure
+fig.autofmt_xdate()
 
 plt.tight_layout()
 plt.show()
