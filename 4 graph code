@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 
 tickers = ["BTC-USD", "GC=F", "^GSPC", "^VIX"]
 data = yf.download(tickers, start="2024-01-01", end="2025-01-01")["Close"]
+
+#interpolate missing data
+data = data.interpolate(method='time')
 normalized = (data - data.min()) / (data.max() - data.min())
 
 # Assign colors
@@ -56,3 +59,7 @@ fig.autofmt_xdate()
 
 plt.tight_layout()
 plt.show()
+
+
+
+
