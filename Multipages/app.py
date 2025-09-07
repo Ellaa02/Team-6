@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 
 ##initalize the app
 app = Dash(__name__, use_pages=True, suppress_callback_exceptions=True, 
-           title="TBD")
+           title="Multi-Page")
 server = app.server ##for deployment
 
 
