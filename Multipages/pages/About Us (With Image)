@@ -1,0 +1,19 @@
+import dash
+from dash import html
+
+dash.register_page(__name__, path="/about", name="About Us")
+
+layout = html.Div([
+    html.H1("About Us"),
+    html.P("This is the About Us page for our site."),
+])
+
+layout.children.append(
+    html.Img(
+        src="/assets/Team_photo.jpg",
+        style={"width": "400px", "border-radius": "12px"}
+    )
+)
+
+
+
