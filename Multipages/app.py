@@ -7,7 +7,7 @@ app = Dash(
     __name__,
     use_pages=True,
     suppress_callback_exceptions=True,
-    title="Multi-Page",
+    title="Team 6 Dashboard",
     external_stylesheets=[dbc.themes.BOOTSTRAP],  # <-- load Bootstrap CSS
 )
 server = app.server
