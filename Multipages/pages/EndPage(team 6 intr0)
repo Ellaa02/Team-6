@@ -6,7 +6,7 @@ dash.register_page(__name__, path="/about")
 layout = html.Div([
     html.H1("About Us"),
     html.P("Welcome to our website!"),
-    html.P("We are dedicated to providing ...")
+    html.P("We are Team 6 and are dedicated to helping you find the best financial assistance...")
 ])
 
 
