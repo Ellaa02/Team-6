@@ -9,4 +9,10 @@ layout = html.Div([
     html.P("We are Team 6 and are dedicated to helping you find the best financial assistance...")
 ])
 
+html.Img(
+    src="/assets/Team_photo.jpg",
+    style={"width": "400px", "border-radius": "12px"}
+)
+
+
 
