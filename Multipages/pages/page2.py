@@ -178,7 +178,7 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
             elif value > -0.5:
                 bgcolor = "#FC9A9A"  # Weak Negative
             elif value > -0.7:
-                bgcolor = "#FF6868"  # Moderate Negative
+                bgcolor = "##F95454"  # Moderate Negative
             else:  # value <= -0.7
                 bgcolor = "#FF0000"  # Strong Negative
                 textcolor = 'white'
@@ -208,7 +208,7 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
             "Weak: 0.3 to 0.5": "#90EE90",
             "Little to No: -0.3 to 0.3": "#FFFFFF",
             "Weak Negative: -0.5 to -0.3": "#FC9A9A",
-            "Moderate Negative: -0.7 to -0.5": "#FF6868",
+            "Moderate Negative: -0.7 to -0.5": "##F95454",
             "Strong Negative: -1.0 to -0.7": "#FF0000",
         }
 
