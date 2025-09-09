@@ -143,7 +143,7 @@ def show_single_ticker(n_clicks, user_query):
             xanchor="right",
             yanchor="bottom",
             showarrow=False,
-            font=dict(size=11, color="#666"),
+            font= {"size":11, "color":"#666666"},
         )
 
         # 4) Info line (uses yfinance metadata; best-effort)
