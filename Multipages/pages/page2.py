@@ -100,22 +100,25 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
 
     elif triggered_id == 'submit-button' and new_ticker:
         query = new_ticker.strip()
-        ticker_to_add = None
+        ticker_to_add = query.upper()  ### default to uppercase version of input
 
-        try: ### this makes it so that if the requests fail, it will go to the except block
-            ### Fetch ticker symbol from Yahoo Finance search API
-            url = f"https://query1.finance.yahoo.com/v1/finance/search?q={query}"
-            headers = {'User-Agent': 'Mozilla/5.0'}
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()
+        ### Build and send the API request
+        url = f"https://query1.finance.yahoo.com/v1/finance/search?q={query}"
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
             data = response.json()
-            if data.get('quotes'):
+            if isinstance(data, dict) and data.get('quotes'):
                 quotes = [q for q in data['quotes'] if '.' not in q.get('symbol', '')]
                 us_quotes = [q for q in quotes if q.get('exchange') in ('NMS', 'NYQ')]
-                ticker_to_add = us_quotes[0]['symbol'] if us_quotes else quotes[0]['symbol'] if quotes else None
-        except Exception:
-            ticker_to_add = query.upper()
-
+            if us_quotes:
+                selected_ticker = us_quotes[0].get('symbol')
+            elif quotes:
+                selected_ticker = quotes[0].get('symbol')
+            if selected_ticker:
+                ticker_to_add = selected_ticker
+        ### end of API request
         if not ticker_to_add: ### error message if no ticker found
             message = "Please enter a valid company name or ticker."
         elif ticker_to_add in stored_tickers:  ### error message if ticker already added
@@ -143,11 +146,11 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
     close_prices = yf.download(
         all_tickers, start=start_date, end=end_date, auto_adjust=True, progress=False
     )['Close']
+    close_prices.dropna(axis=1, how='all', inplace=True)
 
     if isinstance(close_prices, pd.Series):
         close_prices = close_prices.to_frame(name=all_tickers[0])
 
-    close_prices.dropna(axis=1, how='all', inplace=True)
     if close_prices.empty:
         if not stored_tickers and triggered_id == 'submit-button':
              message = f"Could not find data for ticker: {new_ticker}"
