@@ -13,10 +13,16 @@ server = app.server
 app.layout = html.Div(
     [
         dbc.NavbarSimple(
+            color="primary",          
+            dark=True,                
+            expand="md",              
+            sticky="top",             
+            className="mb-4 shadow",  
             children=[
                 dbc.NavItem(dbc.NavLink("Home", href="/", active="exact", className="px-3")),
-                dbc.NavItem(dbc.NavLink("Research", href="/page1", active="exact", className="px-3")),
-                dbc.NavItem(dbc.NavLink("Comparisons", href="/page2", active="exact", className="px-3")),
+                dbc.NavItem(dbc.NavLink("Page 1", href="/page1", active="exact", className="px-3")),
+                dbc.NavItem(dbc.NavLink("Page 2", href="/page2", active="exact", className="px-3")),
+                dbc.NavItem(dbc.NavLink("Page 3", href="/page3", active="exact", className="px-3")),
                 dbc.NavItem(dbc.NavLink("About Us", href="/about", active="exact", className="px-3")),
 
             ],
