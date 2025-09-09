@@ -12,6 +12,7 @@ layout = html.Div(
             "Our group consists of four diverse members, each with their own skills and capabilities. "
             "We look forward to working with you!"
         ),
+        # Recieved assistance from genAI on how to add an image using dash
         html.Img(
             src="/assets/Team_photo.jpg",  
             style={"width": "400px", "border-radius": "12px", "margin-top": "20px"}
