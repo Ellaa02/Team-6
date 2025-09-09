@@ -22,7 +22,7 @@ layout = html.Div([
                                              "padding": "10px", "borderRadius": "5px"}),
         html.P(
             "This dashboard helps investors explore how different stocks respond "
-            "to market volatility. By comparing stock performance with the CBOE "
+            "to market volatility. By comparing stock performance with the S&P 500 and the CBOE "
             "Volatility Index (VIX) and major market indices, users can gain "
             "insight into risk and correlation patterns.",
             style={"padding": "10px", "lineHeight": "1.6"}
@@ -31,10 +31,26 @@ layout = html.Div([
 
     # CBOE Explanation Section
     html.Div([
-        html.H2("What is the CBOE Volatility Index (VIX)?", style={"color": "#ffffff",
+        html.H2("What is the S&P 500 (GSPC)?", style={"color": "#ffffff",
                                                                      "backgroundColor": "#2ca02c",
                                                                      "padding": "10px",
                                                                      "borderRadius": "5px"}),
+
+        html.P(
+            "The S&P 500,  is a stock market index that measures the performance"
+            "of the largest 500 publicly traded companies in the U.S. It is widely "
+            "used as a benchmark for the overall performance of the U.S. stock market. ",
+            style={"padding": "10px", "lineHeight": "1.6"}
+        )
+    ], style={"boxShadow": "2px 2px 10px #888888", "borderRadius": "5px"}),
+    
+    # CBOE Explanation Section
+    html.Div([
+        html.H2("What is the CBOE Volatility Index (VIX)?", style={"color": "#ffffff",
+                                                                     "backgroundColor": "#a02c2c",
+                                                                     "padding": "10px",
+                                                                     "borderRadius": "5px"}),
+
         html.P(
             "Often called the 'fear gauge,' the VIX measures the market’s "
             "expectation of volatility based on S&P 500 index options. "
@@ -43,6 +59,7 @@ layout = html.Div([
             style={"padding": "10px", "lineHeight": "1.6"}
         )
     ], style={"boxShadow": "2px 2px 10px #888888", "borderRadius": "5px"})
+
 ],
     style={"maxWidth": "900px", "margin": "auto", "fontFamily": "Arial, sans-serif"}
 )

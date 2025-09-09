@@ -48,7 +48,7 @@ layout = html.Div(
         "fontFamily": "Arial, sans-serif",  
     },
     children=[
-        html.H1("Single-Ticker Lookup", className="page-title"),
+    html.H1("Single-Ticker Lookup", className="page-title"),
         html.P(
             "Enter a company name or ticker (e.g., “Apple” or “AAPL”).",
             className="page-subtext",
@@ -80,14 +80,13 @@ layout = html.Div(
             ],
         ),
         # add look-up summary: descriptor of the company
-        html.Div(id='lookup-summary', style={'margin': '8px 0', 'fontSize': '13px'}),
+        html.Div(id='lookup-summary', className='summary-box'),
     ],
 )
 
 @callback(
     Output("lookup-figure", "figure"),
     Output("lookup-meta", "children"),
-    #output
     Output('lookup-summary', 'children'),
     Input("lookup-button", "n_clicks"),
     State("lookup-input", "value"),
@@ -117,25 +116,32 @@ def show_single_ticker(n_clicks, user_query):
 
         # Prefer adjusted close
         price = df["Adj Close"] if "Adj Close" in df.columns else df["Close"]
-
+        # 3) Set up the graph
         fig = px.line(
             price,
             title=f"{symbol}",
-            labels={"value"},
+            labels={"value": "Closing Price (USD)"},
+            width=1000,  # Increase width
+            height=600   # Increase height
         )
         fig.update_layout(
             title_x=0.5,
             title_font_size=20,
             title_font_weight="bold",
             margin=dict(l=20, r=20, t=60, b=40),
-            legend_title_text="",
+            legend_title_text="Ticker",
+            
         )
+        fig.update_yaxes(tickprefix="$")
+        
         fig.add_annotation(
             text="Source: Yahoo Finance via yfinance",
             xref="paper",
             yref="paper",
-            x=0,
-            y=-0.18,
+            x=1,
+            y=0,
+            xanchor="right",
+            yanchor="bottom",
             showarrow=False,
             font=dict(size=11, color="#666"),
         )
@@ -147,7 +153,6 @@ def show_single_ticker(n_clicks, user_query):
             long_name = tk.info.get("longName") or tk.info.get("shortName") or symbol
             exchange = tk.info.get("exchange") or tk.info.get("fullExchangeName")
             currency = tk.info.get("currency") or ""
-            #retrieve summary data
             summary = tk.info.get("longBusinessSummary", "Could not fetch company information.")
             if long_name:
                 info_bits.append(f"Name: {long_name}")
