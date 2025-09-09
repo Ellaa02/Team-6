@@ -13,7 +13,7 @@ layout = html.Div(
             "We look forward to working with you!"
         ),
         html.Img(
-            src="/Team_photo.jpg",  
+            src="/assets/Team_photo.jpg",  
             style={"width": "400px", "border-radius": "12px", "margin-top": "20px"}
         ),
     ],
