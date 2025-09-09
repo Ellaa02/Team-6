@@ -1,4 +1,4 @@
-# pages/page1.py — Single-ticker lookup (company name or ticker)
+# pages/page1.py — Single-ticker lookup (company name or ticker)#
 
 import dash
 from dash import dcc, html, Input, Output, State, callback
