@@ -71,12 +71,16 @@ layout = html.Div(
                 )
             ],
         ),
+        # add look-up summary: descriptor of the company
+        html.Div(id='lookup-summary', style={'margin': '8px 0', 'fontSize': '13px'}),
     ],
 )
 
 @callback(
     Output("lookup-figure", "figure"),
     Output("lookup-meta", "children"),
+    #output
+    Output('lookup-summary', 'children'),
     Input("lookup-button", "n_clicks"),
     State("lookup-input", "value"),
 )
@@ -84,7 +88,7 @@ def show_single_ticker(n_clicks, user_query):
     if not user_query:
         fig = px.line(title="Enter a company name or ticker to begin")
         fig.update_layout(title_x=0.5)
-        return fig, ""
+        return fig, "", ""
 
     # 1) Resolve user input to a symbol
     symbol = resolve_to_symbol(user_query)
@@ -101,7 +105,7 @@ def show_single_ticker(n_clicks, user_query):
         if df.empty:
             fig = px.line(title=f"No data found for “{user_query}” ({symbol})")
             fig.update_layout(title_x=0.5)
-            return fig, f"Could not fetch data for: {user_query} ({symbol}). Try another query."
+            return fig, f"Could not fetch data for: {user_query} ({symbol}). Try another query.", "Could not fetch company information."
 
         # Prefer adjusted close
         price = df["Adj Close"] if "Adj Close" in df.columns else df["Close"]
@@ -138,6 +142,8 @@ def show_single_ticker(n_clicks, user_query):
             long_name = tk.info.get("longName") or tk.info.get("shortName") or symbol
             exchange = tk.info.get("exchange") or tk.info.get("fullExchangeName")
             currency = tk.info.get("currency") or ""
+            #retrieve summary data
+            summary = tk.info.get("longBusinessSummary", "Could not fetch company information.")
             if long_name:
                 info_bits.append(f"Name: {long_name}")
             if exchange:
@@ -147,9 +153,9 @@ def show_single_ticker(n_clicks, user_query):
         except Exception:
             info_bits.append(f"Ticker: {symbol}")
 
-        return fig, " | ".join(info_bits)
+        return fig, " | ".join(info_bits), summary
 
     except Exception as e:
         fig = px.line(title=f"Error fetching {symbol}")
         fig.update_layout(title_x=0.5)
-        return fig, f"Error: {e}"
+        return fig, f"Error: {e}", "Could not fetch company information."
