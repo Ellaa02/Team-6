@@ -29,7 +29,7 @@ layout = html.Div([
         )
     ], style={"marginBottom": "30px", "boxShadow": "2px 2px 10px #888888", "borderRadius": "5px"}),
 
-    # CBOE Explanation Section
+    # S&P 500 Explanation Section
     html.Div([
         html.H2("What is the S&P 500 (GSPC)?", style={"color": "#ffffff",
                                                                      "backgroundColor": "#2ca02c",
