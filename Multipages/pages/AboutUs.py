@@ -14,7 +14,3 @@ layout.children.append(
         style={"width": "400px", "border-radius": "12px"}
     )
 )
-
-
-
-
