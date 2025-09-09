@@ -44,7 +44,7 @@ layout = html.Div(
         "flexDirection": "column",  
         "alignItems": "center",     
         "justifyContent": "flex-start",  
-        "minHeight": "100vh",       
+        "minHeight": "120vh",       
         "fontFamily": "Arial, sans-serif",  
     },
     children=[
@@ -118,13 +118,10 @@ def show_single_ticker(n_clicks, user_query):
         # Prefer adjusted close
         price = df["Adj Close"] if "Adj Close" in df.columns else df["Close"]
 
-        # 3) Normalize 0–1 (to match Page 2)
-        norm01 = (price - price.min()) / (price.max() - price.min())
-
         fig = px.line(
-            norm01,
-            title=f"{symbol} — Normalized (0–1) over Past 1Y",
-            labels={"value": "Normalized Value (0–1)", "index": "Date"},
+            price,
+            title=f"{symbol}",
+            labels={"value"},
         )
         fig.update_layout(
             title_x=0.5,
