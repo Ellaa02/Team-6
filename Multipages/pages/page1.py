@@ -40,9 +40,9 @@ def resolve_to_symbol(query: str) -> str | None:
 layout = html.Div(
     className="page-wrap",
     children=[
-        html.H1("Single-Ticker Lookup (Normalized)", className="page-title"),
+        html.H1("Single-Ticker Lookup", className="page-title"),
         html.P(
-            "Enter a company name or ticker (e.g., “Apple” or “AAPL”) to view the past 1-year performance (0–1).",
+            "Enter a company name or ticker (e.g., “Apple” or “AAPL”).",
             className="page-subtext",
         ),
 

@@ -5,7 +5,7 @@ dash.register_page(__name__, path="/about", name="About Us")
 
 layout = html.Div([
     html.H1("About Us"),
-    html.P("This is the About Us page for our site. We are dedicated to making your financial journey as easy as possible."),
+    html.P("This is the About Us page for our site. We are dedicated to making your financial journey as easy as possible. Our group consists of four diverse members, each with their own skills and capabilities. We look forward to working with you!"),
 ])
 
 layout.children.append(
@@ -14,6 +14,7 @@ layout.children.append(
         style={"width": "400px", "border-radius": "12px"}
     )
 )
+
 
 
 
