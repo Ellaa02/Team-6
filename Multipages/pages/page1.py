@@ -39,6 +39,14 @@ def resolve_to_symbol(query: str) -> str | None:
 
 layout = html.Div(
     className="page-wrap",
+    style={
+        "display": "flex",          
+        "flexDirection": "column",  
+        "alignItems": "center",     
+        "justifyContent": "flex-start",  
+        "minHeight": "100vh",       
+        "fontFamily": "Arial, sans-serif",  
+    },
     children=[
         html.H1("Single-Ticker Lookup", className="page-title"),
         html.P(
