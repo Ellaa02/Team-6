@@ -153,13 +153,13 @@ def show_single_ticker(n_clicks, user_query):
             long_name = tk.info.get("longName") or tk.info.get("shortName") or symbol
             exchange = tk.info.get("exchange") or tk.info.get("fullExchangeName")
             currency = tk.info.get("currency") or ""
-            summary = tk.info.get("longBusinessSummary", "Could not fetch company information.")
             if long_name:
                 info_bits.append(f"Name: {long_name}")
             if exchange:
                 info_bits.append(f"Exchange: {exchange}")
             if currency:
                 info_bits.append(f"Currency: {currency}")
+            summary = tk.info.get("longBusinessSummary", "Could not fetch company information.")
         except Exception:
             info_bits.append(f"Ticker: {symbol}")
 
