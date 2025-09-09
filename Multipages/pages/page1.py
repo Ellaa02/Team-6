@@ -53,7 +53,7 @@ layout = html.Div(
             "Enter a company name or ticker (e.g., “Apple” or “AAPL”).",
             className="page-subtext",
         ),
-
+        #callback to get input and button
         html.Div(
             className="controls",
             children=[
@@ -67,9 +67,9 @@ layout = html.Div(
                 html.Button("Show", id="lookup-button", n_clicks=0),
             ],
         ),
-
+        # add info line
         html.Div(id="lookup-meta", className="message"),
-
+        # graph panel
         html.Div(
             className="panel panel--chart",
             children=[
@@ -83,7 +83,7 @@ layout = html.Div(
         html.Div(id='lookup-summary', className='summary-box'),
     ],
 )
-
+# Callback to update graph and info based on user input
 @callback(
     Output("lookup-figure", "figure"),
     Output("lookup-meta", "children"),
@@ -91,6 +91,7 @@ layout = html.Div(
     Input("lookup-button", "n_clicks"),
     State("lookup-input", "value"),
 )
+# sets default graph and messages
 def show_single_ticker(n_clicks, user_query):
     if not user_query:
         fig = px.line(title="Enter a company name or ticker to begin")
@@ -132,8 +133,10 @@ def show_single_ticker(n_clicks, user_query):
             legend_title_text="Ticker",
             
         )
+        # Format y-axis as USD
         fig.update_yaxes(tickprefix="$")
-        
+        # Add source annotation. Using xref and yref as "paper" lets us treat the positions as a 1 by 1 box
+        # where (0,0)=bottom-left and (1,1)=top-right of the plotting area
         fig.add_annotation(
             text="Source: Yahoo Finance via yfinance",
             xref="paper",
@@ -146,7 +149,7 @@ def show_single_ticker(n_clicks, user_query):
             font= {"size":11, "color":"#666666"},
         )
 
-        # 4) Info line (uses yfinance metadata; best-effort)
+        # 4) Info line (uses yfinance metadata; best-effort) & summary box
         info_bits = []
         try:
             tk = yf.Ticker(symbol)
@@ -162,9 +165,9 @@ def show_single_ticker(n_clicks, user_query):
             summary = tk.info.get("longBusinessSummary", "Could not fetch company information.")
         except Exception:
             info_bits.append(f"Ticker: {symbol}")
-
+        #  Return the figure, info line, and summary box content
         return fig, " | ".join(info_bits), summary
-
+    # 5) Handle fetch errors
     except Exception as e:
         fig = px.line(title=f"Error fetching {symbol}")
         fig.update_layout(title_x=0.5)
