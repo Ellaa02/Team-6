@@ -1,5 +1,3 @@
-#app.py
-
 from dash import Dash, html, page_container
 import dash_bootstrap_components as dbc
 
@@ -15,7 +13,7 @@ server = app.server
 app.layout = html.Div(
     [
         dbc.NavbarSimple(
-            brand="Multi-Page App",
+            brand="Back to Home",
             brand_href="/",
             color="primary",          # navbar background color
             dark=True,                # light text on dark background
