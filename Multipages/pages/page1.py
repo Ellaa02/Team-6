@@ -8,7 +8,7 @@ import pandas as pd
 import requests
 from datetime import datetime, timedelta
 
-dash.register_page(__name__, path="/page1", name="Page 1")
+dash.register_page(__name__, path="/page1", name="Research")
 
 def resolve_to_symbol(query: str) -> str | None:
     """
