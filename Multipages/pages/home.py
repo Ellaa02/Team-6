@@ -42,7 +42,7 @@ layout = html.Div([
             "used as a benchmark for the overall performance of the U.S. stock market. ",
             style={"padding": "10px", "lineHeight": "1.6"}
         )
-    ], style={"boxShadow": "2px 2px 10px #888888", "borderRadius": "5px"}),
+    ], style={"boxShadow": "2px 2px 10px #888888", "borderRadius": "5px", "marginBottom": "30px"}),
     
     # CBOE Explanation Section
     html.Div([
