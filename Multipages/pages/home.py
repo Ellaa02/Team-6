@@ -22,8 +22,8 @@ layout = html.Div([
                                              "padding": "10px", "borderRadius": "5px"}),
         html.P(
             "This dashboard helps investors explore how different stocks respond "
-            "to market volatility. By comparing stock performance with the S&P 500 and the CBOE "
-            "Volatility Index (VIX) and major market indices, users can gain "
+            "to market volatility. By comparing stock performance with the the CBOE "
+            "Volatility Index (VIX) and major market indices such as the S&P 500 (GSPC), users can gain "
             "insight into risk and correlation patterns.",
             style={"padding": "10px", "lineHeight": "1.6"}
         )
