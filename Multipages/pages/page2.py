@@ -9,7 +9,7 @@ import requests # Import requests to fetch ticker data
 from datetime import date, timedelta # Import date and timedelta for the date picker
 
 ### register the page Dash app
-dash.register_page(__name__, path="/page2", name="Page 2")
+dash.register_page(__name__, path="/page2", name="Comparisons")
 
 ### page layout
 layout = html.Div([
