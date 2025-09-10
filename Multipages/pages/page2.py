@@ -77,6 +77,7 @@ col_table = {
 }
 
 ### create callbacks
+### AI used for troubleshooting this section
 @callback(
     Output('ticker-performance-chart', 'figure'), ### updates the chart
     Output('ticker-store', 'data'),  ### updates the stored list of tickers
@@ -95,6 +96,7 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
     correlation_component = [] ### Initialize as empty
 
     ### button clicks
+    ### AI used to assist with figuring out how to make button clicks and storage work properly
     if triggered_id == 'clear-button':
         stored_tickers = []
 
@@ -119,6 +121,7 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
             if selected_ticker:
                 ticker_to_add = selected_ticker
         ### end of API request
+        ### AI used to assist with logic
         if not ticker_to_add: ### error message if no ticker found
             message = "Please enter a valid company name or ticker."
         elif ticker_to_add in stored_tickers:  ### error message if ticker already added
@@ -228,7 +231,7 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
     ### combine matrix and legend into one component
     correlation_component = html.Div([matrix_component, legend_table])
 
-    ### normalize prices and create line chart
+    ### normalize prices and create a line chart
     normalized_prices = (close_prices - close_prices.min()) / (close_prices.max() - close_prices.min())
     fig = px.line(
         normalized_prices,
