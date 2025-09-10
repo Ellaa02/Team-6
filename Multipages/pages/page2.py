@@ -13,7 +13,7 @@ dash.register_page(__name__, path="/page2", name="Comparisons")
 
 ### page layout
 layout = html.Div([
-    html.H1("Stocks vs. Volatility Index (VIX)", style={'textAlign': 'center'}),
+    html.H1("Stocks vs. Volatility Index (VIX)", className="page-title"),
     html.P([
         "Comparing normalized performance. S&P 500 included to show general market performance.",
         html.Br(),
@@ -77,6 +77,7 @@ col_table = {
 }
 
 ### create callbacks
+### AI used for troubleshooting this section
 @callback(
     Output('ticker-performance-chart', 'figure'), ### updates the chart
     Output('ticker-store', 'data'),  ### updates the stored list of tickers
@@ -95,27 +96,32 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
     correlation_component = [] ### Initialize as empty
 
     ### button clicks
+    ### AI used to assist with figuring out how to make button clicks and storage work properly
     if triggered_id == 'clear-button':
         stored_tickers = []
 
     elif triggered_id == 'submit-button' and new_ticker:
         query = new_ticker.strip()
-        ticker_to_add = None
+        ticker_to_add = query.upper()  ### default to uppercase version of input
 
-        try: ### this makes it so that if the requests fail, it will go to the except block
-            ### Fetch ticker symbol from Yahoo Finance search API
-            url = f"https://query1.finance.yahoo.com/v1/finance/search?q={query}"
-            headers = {'User-Agent': 'Mozilla/5.0'}
-            response = requests.get(url, headers=headers)
-            response.raise_for_status()
+        ### Build and send the API request
+        url = f"https://query1.finance.yahoo.com/v1/finance/search?q={query}"
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
             data = response.json()
-            if data.get('quotes'):
+            if isinstance(data, dict) and data.get('quotes'):
                 quotes = [q for q in data['quotes'] if '.' not in q.get('symbol', '')]
                 us_quotes = [q for q in quotes if q.get('exchange') in ('NMS', 'NYQ')]
-                ticker_to_add = us_quotes[0]['symbol'] if us_quotes else quotes[0]['symbol'] if quotes else None
-        except Exception:
-            ticker_to_add = query.upper()
-
+            if us_quotes:
+                selected_ticker = us_quotes[0].get('symbol')
+            elif quotes:
+                selected_ticker = quotes[0].get('symbol')
+            if selected_ticker:
+                ticker_to_add = selected_ticker
+        ### end of API request
+        ### AI used to assist with logic
         if not ticker_to_add: ### error message if no ticker found
             message = "Please enter a valid company name or ticker."
         elif ticker_to_add in stored_tickers:  ### error message if ticker already added
@@ -143,11 +149,13 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
     close_prices = yf.download(
         all_tickers, start=start_date, end=end_date, auto_adjust=True, progress=False
     )['Close']
+    # drops missing values to account for tickers like bitcoin that trade on weekends. 
+    # we're okay with dropping the whole row as most stocks don't trade on weekends/holidays.
+    close_prices.dropna(axis=0, how="any", inplace=True) 
 
     if isinstance(close_prices, pd.Series):
         close_prices = close_prices.to_frame(name=all_tickers[0])
 
-    close_prices.dropna(axis=1, how='all', inplace=True)
     if close_prices.empty:
         if not stored_tickers and triggered_id == 'submit-button':
              message = f"Could not find data for ticker: {new_ticker}"
@@ -223,7 +231,7 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
     ### combine matrix and legend into one component
     correlation_component = html.Div([matrix_component, legend_table])
 
-    ### normalize prices and create line chart
+    ### normalize prices and create a line chart
     normalized_prices = (close_prices - close_prices.min()) / (close_prices.max() - close_prices.min())
     fig = px.line(
         normalized_prices,
