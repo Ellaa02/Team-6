@@ -1,20 +1,21 @@
-# pages/page1.py — Stock Info Search
+# pages/page1.py — Single-ticker lookup (company name or ticker)
+# AI assistance
+'''AI helped me to understand code I found on webpage so I can integrate them
+# to my own project. AI also helped me with debugging specific errors''' 
 
 import dash
 from dash import dcc, html, Input, Output, State, callback
 import plotly.express as px
 import yfinance as yf
 import pandas as pd
-import requests  # Makes HTTP requests to a web API.
+import requests
 from datetime import datetime, timedelta
 
-dash.register_page(__name__, path="/page1", name="Page 1")
+dash.register_page(__name__, path="/page1", name="Research")
 
 def resolve_to_symbol(query: str) -> str | None:
     """
     This ake a user's input (e.g., "Apple" or "AAPL") and return the official ticker.
-    - Prefer US exchanges (NASDAQ=NMS, NYSE=NYQ).
-    - Fallback to first quote if nothing on those exchanges.
     - This function takes string and returns uppercase symbol or None.
     """ 
     q = (query or "").strip()
@@ -52,7 +53,6 @@ def resolve_to_symbol(query: str) -> str | None:
         else:
             # nothing returned; treat input as ticker
             return q.upper()
-
     except Exception:
         # network/parse error; safest fallback
         return q.upper()
@@ -68,12 +68,12 @@ layout = html.Div(
         "fontFamily": "Arial, sans-serif",  
     },
     children=[
-        html.H1("Single-Ticker Lookup", className="page-title"),
+    html.H1("Single-Ticker Lookup", className="page-title"),
         html.P(
             "Enter a company name or ticker (e.g., “Apple” or “AAPL”).",
             className="page-subtext",
         ),
-
+        #callback to get input and button
         html.Div(
             className="controls",
             children=[
@@ -87,9 +87,9 @@ layout = html.Div(
                 html.Button("Show", id="lookup-button", n_clicks=0),
             ],
         ),
-
+        # add info line
         html.Div(id="lookup-meta", className="message"),
-
+        # graph panel
         html.Div(
             className="panel panel--chart",
             children=[
@@ -100,10 +100,10 @@ layout = html.Div(
             ],
         ),
         # add look-up summary: descriptor of the company
-        html.Div(id='lookup-summary', style={'margin': '8px 0', 'fontSize': '13px'}),
+        html.Div(id='lookup-summary', className='summary-box'),
     ],
 )
-
+# Callback to update graph and info based on user input
 @callback(
     Output("lookup-figure", "figure"),
     Output("lookup-meta", "children"),
@@ -111,6 +111,7 @@ layout = html.Div(
     Input("lookup-button", "n_clicks"),
     State("lookup-input", "value"),
 )
+# sets default graph and messages
 def show_single_ticker(n_clicks, user_query):
     if not user_query:
         fig = px.line(title="Enter a company name or ticker to begin")
@@ -136,49 +137,57 @@ def show_single_ticker(n_clicks, user_query):
 
         # Prefer adjusted close
         price = df["Adj Close"] if "Adj Close" in df.columns else df["Close"]
-
+        # 3) Set up the graph
         fig = px.line(
             price,
             title=f"{symbol}",
-            labels={"value"},
+            labels={"value": "Closing Price (USD)"},
+            width=1000,  # Increase width
+            height=600   # Increase height
         )
         fig.update_layout(
             title_x=0.5,
             title_font_size=20,
             title_font_weight="bold",
             margin=dict(l=20, r=20, t=60, b=40),
-            legend_title_text="",
+            legend_title_text="Ticker",
+            
         )
+        # Format y-axis as USD
+        fig.update_yaxes(tickprefix="$")
+        # Add source annotation. Using xref and yref as "paper" lets us treat the positions as a 1 by 1 box
+        # where (0,0)=bottom-left and (1,1)=top-right of the plotting area
         fig.add_annotation(
             text="Source: Yahoo Finance via yfinance",
             xref="paper",
             yref="paper",
-            x=0,
-            y=-0.18,
+            x=1,
+            y=0,
+            xanchor="right",
+            yanchor="bottom",
             showarrow=False,
-            font=dict(size=11, color="#666"),
+            font= {"size":11, "color":"#666666"},
         )
 
-        # 4) Info line (uses yfinance metadata; best-effort)
+        # 4) Info line (uses yfinance metadata; best-effort) & summary box
         info_bits = []
         try:
             tk = yf.Ticker(symbol)
             long_name = tk.info.get("longName") or tk.info.get("shortName") or symbol
             exchange = tk.info.get("exchange") or tk.info.get("fullExchangeName")
             currency = tk.info.get("currency") or ""
-            #retrieve summary data
-            summary = tk.info.get("longBusinessSummary", "Could not fetch company information.")
             if long_name:
                 info_bits.append(f"Name: {long_name}")
             if exchange:
                 info_bits.append(f"Exchange: {exchange}")
             if currency:
                 info_bits.append(f"Currency: {currency}")
+            summary = tk.info.get("longBusinessSummary", "Could not fetch company information.")
         except Exception:
             info_bits.append(f"Ticker: {symbol}")
-
+        #  Return the figure, info line, and summary box content
         return fig, " | ".join(info_bits), summary
-
+    # 5) Handle fetch errors
     except Exception as e:
         fig = px.line(title=f"Error fetching {symbol}")
         fig.update_layout(title_x=0.5)
