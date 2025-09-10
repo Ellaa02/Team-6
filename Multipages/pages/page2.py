@@ -13,7 +13,7 @@ dash.register_page(__name__, path="/page2", name="Comparisons")
 
 ### page layout
 layout = html.Div([
-    html.H1("Stocks vs. Volatility Index (VIX)", style={'textAlign': 'center'}),
+    html.H1("Stocks vs. Volatility Index (VIX)", className="page-title"),
     html.P([
         "Comparing normalized performance. S&P 500 included to show general market performance.",
         html.Br(),
@@ -146,7 +146,9 @@ def update_chart(submit_clicks, clear_clicks, start_date, end_date, new_ticker, 
     close_prices = yf.download(
         all_tickers, start=start_date, end=end_date, auto_adjust=True, progress=False
     )['Close']
-    close_prices.dropna(axis=1, how='all', inplace=True)
+    # drops missing values to account for tickers like bitcoin that trade on weekends. 
+    # we're okay with dropping the whole row as most stocks don't trade on weekends/holidays.
+    close_prices.dropna(axis=0, how="any", inplace=True) 
 
     if isinstance(close_prices, pd.Series):
         close_prices = close_prices.to_frame(name=all_tickers[0])
